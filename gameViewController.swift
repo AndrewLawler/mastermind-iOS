@@ -272,22 +272,53 @@ class gameViewController: UIViewController {
     
     // add in the correct pegs for the guess
     func changePegs(){
+        
         pegs = []
-        for i in 0..<realGuess.count {
-            let index = realGuess.index(realGuess.startIndex, offsetBy: i)
-            let index2 = randomSequence.index(randomSequence.startIndex, offsetBy: i)
-            // if the guess char is inside the random sequence, we have a hit atleast
-            if randomSequence.contains(realGuess[index]){
-                // is the char in the right location?
-                if realGuess[index]==randomSequence[index2] {
-                    pegs.insert("b", at: 0)
-                }
-                else {
-                    pegs.insert("w", at: 0)
-                }
+        var guess = Array(realGuess)
+        var answer = Array(randomSequence)
+        
+        for i in 0 ... 3 {
+            if answer[i]==guess[i] {
+                pegs.insert("b", at: 0)
+                guess[i] = "a"
+                answer[i] = "a"
             }
-            // no hits, insert a blank into the location
+        }
+        
+        var i = 0
+        while i<answer.count-1 {
+            if answer[i]=="a" {
+                answer.remove(at: i)
+            }
             else {
+                i += 1
+            }
+        }
+        
+        var k = 0
+        while k<guess.count-1 {
+            if guess[k]=="a" {
+                guess.remove(at: k)
+            }
+            else {
+                k += 1
+            }
+        }
+        
+        var position = 0
+        
+        for i in 0..<guess.count {
+            if answer.contains(guess[i]){
+                pegs.insert("w", at: 0)
+                var g = guess[i]
+                for i in 0..<answer.count {
+                    if answer[i] == g {
+                        position = i
+                    }
+                }
+                answer.remove(at: position)
+            }
+            else{
                 pegs.insert("bl", at: 0)
             }
         }
@@ -295,11 +326,24 @@ class gameViewController: UIViewController {
         pegArray.insert(Peg(guessOne: pegs[0], guessTwo: pegs[1], guessThree: pegs[2], guessFour: pegs[3]), at: 0)
     }
     
+    func amount(input: Character) -> Int {
+        var amount = 0
+        for i in 0..<realGuess.count {
+            let index2 = randomSequence.index(randomSequence.startIndex, offsetBy: i)
+            if randomSequence[index2] == input {
+                amount += 1
+            }
+        }
+        print(amount)
+        return amount
+    }
+    
     // generate a random guess
     func randomGuess(){
         for _ in 1..<5 {
             // generate a four digit sequence of numbers from 1-6, these correlate to button tags
-            randomSequence += String(Int.random(in: 1 ..< 7))
+            //randomSequence += String(Int.random(in: 1 ..< 7))
+            randomSequence = "1234"
         }
     }
     
