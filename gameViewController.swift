@@ -5,10 +5,6 @@
 //  Created by Andrew Lawler on 23/10/2019.
 //  Copyright © 2019 andrewlawler. All rights reserved.
 //
-//  Andrew Lawler
-//  sgalawle - 201210893
-//  A.M.Lawler@Student.Liverpool.ac.uk
-//
 //  iOS App Development Assignment 1 - Mastermind game:
 //  - Selection Bar (Real-Time)
 //  - Score Tracking
@@ -140,6 +136,7 @@ class gameViewController: UIViewController {
                 setScore()
                 // reset all of our arrays
                 blankArrays()
+                randomGuess()
             }
             realGuess = ""
             chosenImages = []
@@ -240,7 +237,9 @@ class gameViewController: UIViewController {
     // Printing physical colours from dictionary
     func sequenceToColour(){
         // change sequence to colours
+        colourOutput = ""
         for randomSequence in randomSequence {
+            // convert numbers to colours
             colourOutput += images[String(randomSequence)]!.uppercased() + " "
         }
     }
@@ -277,6 +276,7 @@ class gameViewController: UIViewController {
         var guess = Array(realGuess)
         var answer = Array(randomSequence)
         
+        // add black pegs first
         for i in 0 ... 3 {
             if answer[i]==guess[i] {
                 pegs.insert("b", at: 0)
@@ -285,6 +285,7 @@ class gameViewController: UIViewController {
             }
         }
         
+        // remove pegs we've already used
         var i = 0
         while i<answer.count-1 {
             if answer[i]=="a" {
@@ -294,7 +295,7 @@ class gameViewController: UIViewController {
                 i += 1
             }
         }
-        
+        // remove pegs we've already used
         var k = 0
         while k<guess.count-1 {
             if guess[k]=="a" {
@@ -306,7 +307,7 @@ class gameViewController: UIViewController {
         }
         
         var position = 0
-        
+        // add white pegs in last
         for i in 0..<guess.count {
             if answer.contains(guess[i]){
                 pegs.insert("w", at: 0)
@@ -326,24 +327,12 @@ class gameViewController: UIViewController {
         pegArray.insert(Peg(guessOne: pegs[0], guessTwo: pegs[1], guessThree: pegs[2], guessFour: pegs[3]), at: 0)
     }
     
-    func amount(input: Character) -> Int {
-        var amount = 0
-        for i in 0..<realGuess.count {
-            let index2 = randomSequence.index(randomSequence.startIndex, offsetBy: i)
-            if randomSequence[index2] == input {
-                amount += 1
-            }
-        }
-        print(amount)
-        return amount
-    }
-    
     // generate a random guess
     func randomGuess(){
+        randomSequence = ""
         for _ in 1..<5 {
             // generate a four digit sequence of numbers from 1-6, these correlate to button tags
-            //randomSequence += String(Int.random(in: 1 ..< 7))
-            randomSequence = "1234"
+            randomSequence += String(Int.random(in: 1 ..< 7))
         }
     }
     
